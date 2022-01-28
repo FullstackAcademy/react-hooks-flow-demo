@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
+import LifeCycles from './LifeCycles';
 
 function App() {
+  const [lifeCycleShown, setLifeCycleShown] = useState(false);
+  if (lifeCycleShown) {
+    return (
+      <>
+        <button onClick={() => setLifeCycleShown(false)}>Unmount LifeCycles Component</button>
+        <LifeCycles title="Welcome to the LifeCycles App" />
+      </>
+    )
+  }
+
   return (
-    <div style={{ textAlign: 'center' }}>
-      <header>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <button onClick={() => setLifeCycleShown(true)}>Mount LifeCycles App</button>
+    </>
+  )
 }
 
 export default App;
+
