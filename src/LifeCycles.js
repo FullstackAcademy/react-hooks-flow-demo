@@ -23,6 +23,10 @@ function LifeCycles (props) {
     return 0;
   });
 
+  // This is a useReducer hook.
+  // It's like useState but takes in a reducer function
+  // and returns us a dispatch function to dispatch ACTIONS
+  // This is very similar to Redux
   const [num2, dispatch] = useReducer((state, action) => {
     logLifeCycle('useReducer run', () => {
       console.log('state',state);
@@ -41,31 +45,43 @@ function LifeCycles (props) {
     return 0;
   });
 
+  // This dispatches the increment number 2 action
   const dispatchReducer = () => {
     dispatch({
       type: 'INCREMENT_NUMBER2'
     });
   };
 
+  // This is a use Context hook. 
+  // It allows us to access the value of a context provider
+  // higher up in the component tree.
   const context = useContext(AppContext);
   logLifeCycle('useContext', () => {
     console.log('context', context);
   });
 
+  // This is use Effect
+  // This one is missing the dependency array
+  // so it runs EVERYTIME the compoent renders
   useEffect(() => {
     logLifeCycle('useEffect');
+    // This function is the cleanup, it runs when the component unmounts
     return () => {
       logLifeCycle('useEffect Cleanup');
     }
   });
 
+  // This useEffect has an empty dependency array which means
+  // it only runs the first time the component renders
   useEffect(() => {
     logLifeCycle('useEffect 2');
     return () => {
       logLifeCycle('useEffect 2 Cleanup');
     }
-  });
+  }, []);
 
+  // This is useLayoutEffect, it runs right before 
+  // the component gets rendered by react to the DOM
   useLayoutEffect(() => {
     logLifeCycle('useLayoutEffect');
     return () => {
@@ -73,19 +89,31 @@ function LifeCycles (props) {
     }
   })
 
+  // This is just logging that we are inside the main body of the
+  // functional component
   logLifeCycle('render', () => {
     console.log('props', props);
   });
 
+  // Helper function to increment Num1 by 1
   const increment = () => {
     setNum1(num1 + 1);
   }
 
+  // This is a function that calculates the sum of 
+  // num1 and num2.
+  // the useMemo hook memoizes the value of the sum.
+  // This function will only run when num1 and num2 change
+  // because they are in the dependency array
   const memoizedSum = useMemo(() => {
     logLifeCycle('useMemo');
     return num1 + num2
   }, [num1, num2]);
 
+  // This is similar to useMemo but instead it memoizes a
+  // function definition.
+  // Instead of defining the function on every render, it
+  // only defines the new function when num1 and num2 change.
   const multiply = useCallback(() => {
     logLifeCycle('useCallback', () => {
       console.log('num1', num1);
@@ -105,9 +133,9 @@ function LifeCycles (props) {
       <h2>Number 2 (useReducer): {num2}</h2>
       <h2>Sum: {memoizedSum} </h2>
       <h2>Product: {product} </h2>
-      <button onClick={event => increment(event)}>Increment Number 1</button>
-      <button onClick={event => dispatchReducer(event)}>Increment Number 2</button>
-      <button onClick={event => setProduct(multiply())}>Multiply</button>
+      <button onClick={event => increment(event)}>Increment Number 1 (using useState Hook)</button>
+      <button onClick={event => dispatchReducer(event)}>Increment Number 2 (using useReducer Hook)</button>
+      <button onClick={event => setProduct(multiply())}>Multiply (using useMemo Hook)</button>
     </>
   );
 }
